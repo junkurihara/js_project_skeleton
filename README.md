@@ -21,6 +21,7 @@ $ npm run browser
 
 // Execute babel and output transpiled JS files to ./dist,
 // and create their bandle file via webpack.
+// This also removes console.log in source codes.
 $ npm run build
 ```
 
