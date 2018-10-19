@@ -1,6 +1,6 @@
 // Karma configuration
 // Generated on Wed Jun 13 2018 13:09:34 GMT+0900 (JST)
-
+const webpack = require('webpack');
 const webpackConfig = require('./webpack.config.js');
 const babelExtraPlugins = ['babel-plugin-istanbul'];
 const getWebpackConfig = () => {
@@ -8,7 +8,8 @@ const getWebpackConfig = () => {
   config.mode = 'development';
   delete config.entry;
   delete config.output;
-  delete config.plugins;
+  // delete config.plugins;
+
 
   config.module.rules = config.module.rules.map( (elem) => {
     if(elem.use[0].loader === 'babel-loader'){

@@ -64,7 +64,13 @@ const webConfig = {
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
-    new webpack.optimize.MinChunkSizePlugin({minChunkSize: 1000})
+    new webpack.optimize.MinChunkSizePlugin({minChunkSize: 1000}),
+    new webpack.DefinePlugin({
+      'process.env': {
+        // NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        TEST_ENV: JSON.stringify(process.env.TEST_ENV),
+      }
+    })
   ],
   node: {
     fs: 'empty'
@@ -75,11 +81,25 @@ module.exports = (env, argv) => {
   const config = webConfig;
   if (argv.mode === 'development'){
     config.devtool = 'inline-source-map'; // add inline source map
-    Object.assign(config.entry, {
-      'test': ['./test/test.spec.js']
-    });
   }
-  // else if(argv.mode === 'production'){
-  // }
+  else if(argv.mode === 'production'){
+    config.output.filename = '[name].bundle.min.js';
+  }
+
+  // when TEST_ENV is set, only test bundle is generated
+  if(process.env.TEST_ENV){
+    config.entry = {
+      '../test/html/test': ['./test/test.spec.js']
+    };
+
+    if(process.env.TEST_ENV === 'bundle'){
+      const newEntry = {};
+      Object.keys(config.entry).map( (key) => {
+        const newKey = `${key}.fromBundled`;
+        newEntry[newKey] = config.entry[key];
+      });
+      config.entry = newEntry;
+    }
+  }
   return config;
 };
