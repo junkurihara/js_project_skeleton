@@ -1,35 +1,13 @@
 /**
  * webpack.config.js
  */
-const libconf = require('./jslib.config.js');
+const libconf = require('./webpack.common.js'); // TODO webpackに統一したい。webpack.config.jsをdev/prod/testなどで分割するついでに対応？
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
+const ShakePlugin = require('webpack-common-shake').Plugin;
 
-// port babelrc from .babelrc
-const getBabelWebOpt = () => {
-  const pluginExclude = []; // add here node-specific plugins
-  const envBrowserTargets = [
-    'last 2 chrome versions',
-    'last 2 firefox versions',
-    'IE 11',
-    'last 2 Edge versions'
-  ];
-  const babelrc = JSON.parse(fs.readFileSync('./.babelrc', 'utf8'));
-  babelrc.babelrc = false;
-  babelrc.presets = babelrc.presets.map( (elem) => {
-    if (elem instanceof Array){
-      if(elem[0] === '@babel/preset-env'){
-        elem[1].targets.browsers = envBrowserTargets;
-        elem[1].modules = false; // for browsers. if true, import statements will be transpiled to CommonJS 'require', and webpack tree shaking doesn't work.
-      }
-    }
-    return elem;
-  });
-  babelrc.plugins = babelrc.plugins.filter( (elem) => pluginExclude.indexOf(elem) < 0);
-  return babelrc;
-};
-
+// webpack main configration
 const webConfig = {
   target: 'web',
   entry: {},
@@ -52,7 +30,7 @@ const webConfig = {
         test: /\.(m|)js$/,
         use: [{
           loader: 'babel-loader',
-          options: getBabelWebOpt()
+          options: getBabelOptionsForWebpack()
         }],
         exclude: path.join(__dirname, 'node_modules') // exclude: /node_modules/
       }
@@ -75,9 +53,10 @@ const webConfig = {
   }
 };
 
+// export main configuration adjusted to various environments
 module.exports = (env, argv) => {
-  //////////////////
-  // to build library
+  ////////////////////////////////////////////////////////////////////////
+  // library build setting
   const config = webConfig;
   config.entry[libconf.libraryName] = [libconf.entry];
 
@@ -85,45 +64,20 @@ module.exports = (env, argv) => {
     config.devtool = 'inline-source-map'; // add inline source map
   }
   else if(argv.mode === 'production'){
-    config.output.filename = `[name].${libconf.bundleSuffix}.${libconf.minimizeSuffix}.js`;
+    config.output.filename = `[name].${libconf.bundleSuffix}.min.js`;
+    config.plugins.push( new ShakePlugin() );
   }
 
-  //////////////////
-  // to build test bundle
+  ////////////////////////////////////////////////////////////////////////
+  // test bundle build setting
   // when TEST_ENV is set, only test bundle is generated
   // this is only the case where the bundled js files are generated for test using html file.
   if(process.env.TEST_ENV){
-    const parentDir = './test';
-    const files = fs.readdirSync(parentDir);
-    const testFileRegExp = new RegExp('.*\\.spec\\.js$');
-    const testFiles = files.filter((file) => fs.statSync(`${parentDir}/${file}`).isFile() && testFileRegExp.test(file));
-
-    config.entry = {};
-    testFiles.map( (file) => {
-      const prefix = file.slice(0, -8);
-      config.entry[`.${parentDir}/html/${prefix}`] = [ `${parentDir}/${file}` ];
-    });
-
-    if(process.env.TEST_ENV === 'bundle'){
-      const newEntry = {};
-      Object.keys(config.entry).map( (key) => {
-        const newKey = `${key}.fromBundled`;
-        newEntry[newKey] = config.entry[key];
-      });
-      config.entry = newEntry;
-    }
-    else if(process.env.TEST_ENV === 'window'){
-      const newEntry = {};
-      Object.keys(config.entry).map( (key) => {
-        const newKey = `${key}.fromWindow`;
-        newEntry[newKey] = config.entry[key];
-      });
-      config.entry = newEntry;
-    }
-
+    config.entry = getEntriesForHTMLTest(config);
     // TODO: Edit HTML here
   }
 
+  // for require through dynamic variables in webpack
   const entry = libconf.entry.split('/').slice(-1)[0];
   const bundle = `${libconf.libraryName}.${libconf.bundleSuffix}.js`;
 
@@ -138,3 +92,51 @@ module.exports = (env, argv) => {
 
   return config;
 };
+
+// port babelrc from .babelrc
+function getBabelOptionsForWebpack() {
+  const pluginExclude = []; // add here node-specific plugins
+  const babelrc = JSON.parse(fs.readFileSync('./.babelrc', 'utf8'));
+  babelrc.babelrc = false;
+  babelrc.presets = babelrc.presets.map( (elem) => {
+    if (elem instanceof Array && elem.length > 0){
+      // for browsers. if true, import statements will be transpiled to CommonJS 'require', and webpack tree shaking doesn't work.
+      if(elem[0] === '@babel/preset-env') elem[1].modules = false;
+    }
+    return elem;
+  });
+  babelrc.plugins = babelrc.plugins.filter( (elem) => pluginExclude.indexOf(elem) < 0);
+  return babelrc;
+}
+
+// get test file names for test with static html
+function getEntriesForHTMLTest (config) {
+  const parentDir = './test';
+  const files = fs.readdirSync(parentDir);
+  const testFileRegExp = new RegExp('.*\\.spec\\.js$');
+  const testFiles = files.filter((file) => fs.statSync(`${parentDir}/${file}`).isFile() && testFileRegExp.test(file));
+
+  config.entry = {};
+  testFiles.map( (file) => {
+    const prefix = file.slice(0, -8);
+    config.entry[`.${parentDir}/html/${prefix}`] = [ `${parentDir}/${file}` ];
+  });
+
+  if(process.env.TEST_ENV === 'bundle'){
+    const newEntry = {};
+    Object.keys(config.entry).map( (key) => {
+      const newKey = `${key}.fromBundled`;
+      newEntry[newKey] = config.entry[key];
+    });
+    config.entry = newEntry;
+  }
+  else if(process.env.TEST_ENV === 'window'){
+    const newEntry = {};
+    Object.keys(config.entry).map( (key) => {
+      const newKey = `${key}.fromWindow`;
+      newEntry[newKey] = config.entry[key];
+    });
+    config.entry = newEntry;
+  }
+  return config.entry;
+}

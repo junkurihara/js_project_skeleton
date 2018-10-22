@@ -1,7 +1,7 @@
 /**
  * prepare.js
  */
-const libconf = require('../jslib.config.js');
+const libconf = require('../webpack.common.js');
 
 const entry = libconf.entry.split('/').slice(-1)[0];
 const bundle = `${libconf.libraryName}.${libconf.bundleSuffix}.js`;

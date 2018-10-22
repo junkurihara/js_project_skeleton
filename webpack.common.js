@@ -1,5 +1,5 @@
 /**
- * jslib.config.js
+ * webpack.common.js
  */
 
 module.exports = {
@@ -7,4 +7,3 @@ module.exports = {
   entry: './src/index.js',
   bundleSuffix: 'bundle', // this generates `testlib.bundle.js` via npm run build
 };
-

@@ -4,7 +4,7 @@ Project Skeleton for JavaScript Library Development
 > **WARNING**: At this time this solution should be considered suitable for research and experimentation, further code and security review is needed before utilization in a production application.
 
 # Usage
-Just clone this repo, remove `.git`, and edit `package.json`, `webpack.config.js`, `karma.conf.js` and whatever for your project. The simplest way is editing only `jslib.config.js` which defines the library name and library entry point.
+Just clone this repo, remove `.git`, and edit `package.json`, `webpack.config.js`, `karma.conf.js` and whatever for your project. The simplest way is editing only `webpack.common.js` which defines the library name and library entry point.
 
 ## Npm commands
 By specifying `:bundled` as a suffix of each test commands, i.e, `test` and `karma`, the test would be done with the **bundled library** `dist/testlib.bundled.js`. Note that by plain commands, tests will be executed by importing from `src/index.js`. These tests should be done considering use cases of public library. Namely, the universal library is expected to be used by various ways of importing and executing, like ones from babel-ed sources (`dist/index.js`), from one bundle file (`dist/testlib.bundle.js`), on Node.js, and on browsers through a certain bundlers. Also you can test the case where the bundled library is imported as a part of `window`, i.e., `window.testlib`.

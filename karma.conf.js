@@ -1,6 +1,6 @@
 // Karma configuration
 // Generated on Wed Jun 13 2018 13:09:34 GMT+0900 (JST)
-const libconf = require('./jslib.config.js');
+const libconf = require('./webpack.common.js');
 const webpackConfig = require('./webpack.config.js');
 const babelExtraPlugins = ['babel-plugin-istanbul'];
 const getWebpackConfig = () => {
@@ -11,7 +11,9 @@ const getWebpackConfig = () => {
 
   config.module.rules = config.module.rules.map( (elem) => {
     if(elem.use[0].loader === 'babel-loader'){
-      elem.use[0].options.plugins.push(...babelExtraPlugins);
+      if (typeof elem.use[0].options === 'undefined') elem.use[0].options = { plugins: [babelExtraPlugins] };
+      else if (typeof elem.use[0].options.plugins === 'undefined') elem.use[0].options.plugins = [babelExtraPlugins];
+      else elem.use[0].options.plugins.push(...babelExtraPlugins);
     }
     return elem;
   });
