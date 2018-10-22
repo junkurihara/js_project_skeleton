@@ -12,12 +12,12 @@ By specifying `:bundled` as a suffix of each test commands, i.e, `test` and `kar
 ```shell
 // Test for node.js with mocha.
 $ npm run test
-$ npm run test:bundled // test with `dist/testlib.bundle.js`
+$ npm run test:bundle // test with `dist/testlib.bundle.js`
  
 // Test for browsers (headless chrome) with Karma.
 $ npm run karma
 $ npm run karma:bundle // test with `dist/testlib.bundle.js`
-$ npm run karma:bundle // test with `window.testlib`
+$ npm run karma:window // test with `window.testlib`
 
 // Generate bandled test files (not library) for compatibility test on various browsers.
 // open ./test/html/test.html with your intended browser after executing this command.
