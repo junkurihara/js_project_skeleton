@@ -1,7 +1,7 @@
 /**
  * webpack.config.js
  */
-
+const libconf = require('./jslib.config.js');
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
@@ -32,15 +32,13 @@ const getBabelWebOpt = () => {
 
 const webConfig = {
   target: 'web',
-  entry: {
-    testlib: ['./src/index.js'],
-  },
+  entry: {},
   output: {
-    filename: '[name].bundle.js',
+    filename: `[name].${libconf.bundleSuffix}.js`,
     chunkFilename: '[name].js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: path.resolve(__dirname, 'dist'),
-    library: 'testlib', // todo change library name to import from window
+    path: path.resolve(__dirname, './dist'),
+    publicPath: path.resolve(__dirname, './dist'),
+    library: libconf.libraryName,
     libraryTarget: 'umd',
     globalObject: 'this' // for node js import
   },
@@ -78,19 +76,33 @@ const webConfig = {
 };
 
 module.exports = (env, argv) => {
+  //////////////////
+  // to build library
   const config = webConfig;
+  config.entry[libconf.libraryName] = [libconf.entry];
+
   if (argv.mode === 'development'){
     config.devtool = 'inline-source-map'; // add inline source map
   }
   else if(argv.mode === 'production'){
-    config.output.filename = '[name].bundle.min.js';
+    config.output.filename = `[name].${libconf.bundleSuffix}.${libconf.minimizeSuffix}.js`;
   }
 
+  //////////////////
+  // to build test bundle
   // when TEST_ENV is set, only test bundle is generated
+  // this is only the case where the bundled js files are generated for test using html file.
   if(process.env.TEST_ENV){
-    config.entry = {
-      '../test/html/test': ['./test/test.spec.js']
-    };
+    const parentDir = './test';
+    const files = fs.readdirSync(parentDir);
+    const testFileRegExp = new RegExp('.*\\.spec\\.js$');
+    const testFiles = files.filter((file) => fs.statSync(`${parentDir}/${file}`).isFile() && testFileRegExp.test(file));
+
+    config.entry = {};
+    testFiles.map( (file) => {
+      const prefix = file.slice(0, -8);
+      config.entry[`.${parentDir}/html/${prefix}`] = [ `${parentDir}/${file}` ];
+    });
 
     if(process.env.TEST_ENV === 'bundle'){
       const newEntry = {};
@@ -108,6 +120,21 @@ module.exports = (env, argv) => {
       });
       config.entry = newEntry;
     }
+
+    // TODO: Edit HTML here
   }
+
+  const entry = libconf.entry.split('/').slice(-1)[0];
+  const bundle = `${libconf.libraryName}.${libconf.bundleSuffix}.js`;
+
+  config.plugins.push(
+    new webpack.ContextReplacementPlugin(
+      RegExp('./src'), RegExp(entry)// only src/index.js is allowed to get imported.
+    ),
+    new webpack.ContextReplacementPlugin(
+      RegExp('./dist'), RegExp(bundle)// only dist/xxx.bundle.js is allowed to get imported.
+    )
+  );
+
   return config;
 };

@@ -1,5 +1,6 @@
 // Karma configuration
 // Generated on Wed Jun 13 2018 13:09:34 GMT+0900 (JST)
+const libconf = require('./jslib.config.js');
 const webpackConfig = require('./webpack.config.js');
 const babelExtraPlugins = ['babel-plugin-istanbul'];
 const getWebpackConfig = () => {
@@ -7,8 +8,6 @@ const getWebpackConfig = () => {
   config.mode = 'development';
   delete config.entry;
   delete config.output;
-  // delete config.plugins;
-
 
   config.module.rules = config.module.rules.map( (elem) => {
     if(elem.use[0].loader === 'babel-loader'){
@@ -35,8 +34,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'dist/testlib.bundle.js', // TODO: change library name to test window-imported library
-      'test/**/*.spec.js'
+      `./dist/${libconf.libraryName}.${libconf.bundleSuffix}.js`,
+      './test/**/*.spec.js'
     ],
 
 
