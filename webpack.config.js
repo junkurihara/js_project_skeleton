@@ -33,14 +33,14 @@ const getBabelWebOpt = () => {
 const webConfig = {
   target: 'web',
   entry: {
-    lib: ['./src/index.js'],
+    testlib: ['./src/index.js'],
   },
   output: {
     filename: '[name].bundle.js',
     chunkFilename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     publicPath: path.resolve(__dirname, 'dist'),
-    library: 'lib',
+    library: 'testlib', // todo change library name to import from window
     libraryTarget: 'umd',
     globalObject: 'this' // for node js import
   },
@@ -96,6 +96,14 @@ module.exports = (env, argv) => {
       const newEntry = {};
       Object.keys(config.entry).map( (key) => {
         const newKey = `${key}.fromBundled`;
+        newEntry[newKey] = config.entry[key];
+      });
+      config.entry = newEntry;
+    }
+    else if(process.env.TEST_ENV === 'window'){
+      const newEntry = {};
+      Object.keys(config.entry).map( (key) => {
+        const newKey = `${key}.fromWindow`;
         newEntry[newKey] = config.entry[key];
       });
       config.entry = newEntry;

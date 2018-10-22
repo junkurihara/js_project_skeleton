@@ -35,6 +35,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'dist/testlib.bundle.js', // TODO: change library name to test window-imported library
       'test/**/*.spec.js'
     ],
 
