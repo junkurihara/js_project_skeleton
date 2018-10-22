@@ -1,3 +1,4 @@
+const env = (process.env.TEST_ENV === 'bundle') ? 'From bundle': 'From source';
 const hello = (process.env.TEST_ENV === 'bundle')
   ? require('../dist/lib.bundle.js')
   : require('../src/index.js');
@@ -11,7 +12,7 @@ import chai from 'chai';
 const expect = chai.expect;
 
 
-describe('Test skeleton', () => {
+describe(`${env}: Test skeleton`, () => {
   before( async () => {
     console.log(message);
   });

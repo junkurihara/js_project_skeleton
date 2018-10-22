@@ -1,6 +1,5 @@
 // Karma configuration
 // Generated on Wed Jun 13 2018 13:09:34 GMT+0900 (JST)
-const webpack = require('webpack');
 const webpackConfig = require('./webpack.config.js');
 const babelExtraPlugins = ['babel-plugin-istanbul'];
 const getWebpackConfig = () => {
