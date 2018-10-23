@@ -5,6 +5,7 @@ const common = require('./webpack.common.js');
 const fs = require('fs');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const jsdom = require('jsdom');
 
 // webpack main configration
 const webpackConfig = {
@@ -37,7 +38,7 @@ module.exports = (env, argv) => {
     // NOTE Karma does not refer to config.entry, and it pre-process the spec files written in karma.conf.js
     if(process.env.NODE_ENV === 'test'){
       config.entry = getEntriesForHTMLTest(config);
-      // TODO: Edit HTML here
+      createNewHtml(config.entry); // Edit HTML here
     }
 
     // for require through dynamic variables in webpack
@@ -54,12 +55,17 @@ module.exports = (env, argv) => {
   return config;
 };
 
+const typeList = {
+  source: {filePrefix: ''},
+  bundle: {filePrefix: 'fromBundled'},
+  window: {filePrefix: 'fromWindow'},
+};
+const testHtmlName = './test/html/test.html';
+
 // get test file names for test with static html
 function getEntriesForHTMLTest (config) {
   const parentDir = './test';
-  const files = fs.readdirSync(parentDir);
-  const testFileRegExp = new RegExp('.*\\.spec\\.js$');
-  const testFiles = files.filter((file) => fs.statSync(`${parentDir}/${file}`).isFile() && testFileRegExp.test(file));
+  const testFiles = getFilteredFileList(parentDir, new RegExp('.*\\.spec\\.js$'));
 
   config.entry = {};
   testFiles.map( (file) => {
@@ -70,7 +76,7 @@ function getEntriesForHTMLTest (config) {
   if(process.env.TEST_ENV === 'bundle'){
     const newEntry = {};
     Object.keys(config.entry).map( (key) => {
-      const newKey = `${key}.fromBundled`;
+      const newKey = `${key}.${typeList['bundle'].filePrefix}`;
       newEntry[newKey] = config.entry[key];
     });
     config.entry = newEntry;
@@ -78,10 +84,76 @@ function getEntriesForHTMLTest (config) {
   else if(process.env.TEST_ENV === 'window'){
     const newEntry = {};
     Object.keys(config.entry).map( (key) => {
-      const newKey = `${key}.fromWindow`;
+      const newKey = `${key}.${typeList['window'].filePrefix}`;
       newEntry[newKey] = config.entry[key];
     });
     config.entry = newEntry;
   }
   return config.entry;
 }
+
+function createNewHtml(newEntry){
+  // list new test bundle files
+  const files = Object.keys(newEntry).map( (elem) => {
+    const x = elem.split('/');
+    return `${x[x.length-1]}.bundle.js`;
+  });
+
+  // filter existing test bundle files
+  const newList = getFilteredFileList('./test/html', new RegExp('.*\\.bundle\\.js$'));
+
+  // merge existing and new file lists
+  files.map( (f) => { if (newList.indexOf(f) < 0) newList.push(f); });
+
+  // create dom
+  const domForTest= new jsdom.JSDOM(testHtmlTemplate);
+
+  // import test bundle files
+  newList.map( (f) => {
+    const p = domForTest.window.document.createElement('p');
+
+    // get test bundle file type
+    const type = (f.match(/Bundled/)) ? 'bundle'
+      : (f.match(/Window/)) ? 'window' : 'source';
+
+    // window import
+    if (type === 'window') {
+      const bundleScript = domForTest.window.document.createElement('script');
+      bundleScript.src = `../../dist/${common.bundleName}`;
+      p.appendChild(bundleScript);
+    }
+
+    // script import
+    const script = domForTest.window.document.createElement('script');
+    script.src = `./${f}`;
+    p.appendChild(script);
+    domForTest.window.document.body.querySelector('#test').appendChild(p);
+  });
+
+  // generate html
+  const html = domForTest.window.document.documentElement.outerHTML;
+  fs.writeFileSync(testHtmlName, html, 'utf8');
+}
+
+function getFilteredFileList(parentDir, fileRegExp){
+  const files = fs.readdirSync(parentDir);
+  return files.filter((file) => fs.statSync(`${parentDir}/${file}`).isFile() && fileRegExp.test(file));
+}
+
+const testHtmlTemplate =
+  '<!DOCTYPE html>\n' +
+  '<html lang="en">\n' +
+  '<head>\n' +
+  '  <meta charset="UTF-8">\n' +
+  '  <title>Title</title>\n' +
+  '  <link href="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.css" rel="stylesheet" />\n' +
+  '  <script src="../../node_modules/@babel/polyfill/browser.js"></script>\n' +
+  '</head>\n' +
+  '<body>\n' +
+  '<div id="mocha"></div>\n' +
+  '<script src="https://cdn.rawgit.com/mochajs/mocha/2.2.5/mocha.js"></script>\n' +
+  '<script>mocha.setup(\'bdd\')</script>\n' +
+  '<div id="test"></div>\n' +
+  '<script>mocha.run();</script>\n' +
+  '</body>\n' +
+  '</html>';
