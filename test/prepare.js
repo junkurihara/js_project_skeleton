@@ -1,13 +1,7 @@
 /**
  * prepare.js
  */
-const libconf = require('../webpack.common.js');
-
-const entry = libconf.entry.split('/').slice(-1)[0];
-const bundle = `${libconf.libraryName}.${libconf.bundleSuffix}.js`;
-
-const libSrc = require(`../src/${entry}`);
-const libBundle = require(`../dist/${bundle}`);
+const common = require('../webpack.common.js');
 
 export function getTestEnv(){
   let envName;
@@ -16,23 +10,23 @@ export function getTestEnv(){
   if(process.env.TEST_ENV === 'bundle'){
     envName = 'Bundle';
     message = '**This is a test with a bundled library';
-    library = libBundle;
+    library = require(`../dist/${common.bundleName}`);
   }
   else if (process.env.TEST_ENV === 'window'){
-    if(typeof window !== 'undefined' && typeof window[libconf.libraryName] !== 'undefined'){
+    if(typeof window !== 'undefined' && typeof window[common.libName] !== 'undefined'){
       envName = 'Window';
-      library = window[libconf.libraryName];
+      library = window[common.libName];
       message = '**This is a test with a library imported from window.**';
     }
     else{
       envName = 'Source (Not Window)';
-      library = libSrc;
+      library = require(`../src/${common.entryName}`);
       message = '**This is a test with source codes in src.**';
     }
   }
   else {
     envName = 'Source';
-    library = libSrc;
+    library = require(`../src/${common.entryName}`);
     message = '**This is a test with source codes in src.**';
 
   }
