@@ -1,3 +1,4 @@
+src/
 coverage/
 obsolete/
 test/
@@ -7,6 +8,8 @@ yarn-error.log
 .eslintrc.json
 karma.conf.js
 webpack.dev.js
+webpack.common.js
+webpack.prod.js
 .idea/
 .git/
 .gitignore

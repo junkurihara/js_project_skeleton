@@ -45,7 +45,7 @@
     "cross-env": "^5.2.0",
     "eslint": "^5.7.0",
     "jsdom": "^12.2.0",
-    "karma": "3.0.0",
+    "karma": "3.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
     "karma-coverage": "^1.1.2",
