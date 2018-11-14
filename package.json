@@ -7,11 +7,14 @@
     "include": [ "src/**/*.js" ],
     "exclude": [ "webpack.*.js", "**/dist/**", "**/obsolete/**", "**/node_modules/**", "**/test/**" ],
     "reporter": [ "lcov", "text" ],
+    "require": [ "@babel/register" ],
     "report-dir": "./coverage/nyc",
+    "sourceMap": false,
+    "instrument": false,
     "all": true
   },
   "scripts": {
-    "mocha": "./node_modules/.bin/mocha --require @babel/register --recursive $(find test -name '*.spec.js')",
+    "mocha": "./node_modules/.bin/mocha --recursive $(find test -name '*.spec.js')",
     "test": "cross-env NODE_ENV=test nyc npm run mocha",
     "test:bundle": "npm run webpack && cross-env TEST_ENV=bundle npm run test",
     "karma": "cross-env TEST_ENV=source ./node_modules/.bin/karma start",
