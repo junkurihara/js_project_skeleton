@@ -4,10 +4,10 @@
   "description": "javascript project skeleton for universal module definition",
   "main": "dist/index.js",
   "nyc": {
+    "include": [ "src/**/*.js" ],
+    "exclude": [ "webpack.*.js", "**/dist/**", "**/obsolete/**", "**/node_modules/**", "**/test/**" ],
     "reporter": [ "lcov", "text" ],
     "report-dir": "./coverage/nyc",
-    "sourceMap": false,
-    "instrument": false,
     "all": true
   },
   "scripts": {
