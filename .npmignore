@@ -15,3 +15,5 @@ webpack.prod.js
 .git/
 .gitignore
 .circleci/
+.nyc_output/
+.nycrc

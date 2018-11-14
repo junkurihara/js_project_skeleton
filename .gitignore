@@ -6,4 +6,4 @@ yarn-error.log
 .idea/
 .vscode/
 .coverage/
-.
+.nyc_output/

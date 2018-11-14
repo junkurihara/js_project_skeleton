@@ -3,17 +3,6 @@
   "version": "0.0.1",
   "description": "javascript project skeleton for universal module definition",
   "main": "dist/index.js",
-  "nyc": {
-    "include": [ "src/**/*.js", "src/*.js" ],
-    "exclude": [ "webpack.*.js", "**/dist/**", "**/obsolete/**", "**/node_modules/**", "**/test/**" ],
-    "reporter": [ "lcov", "text-summary" ],
-    "require": [ "@babel/register" ],
-    "report-dir": "./coverage/nyc",
-    "extension": [ ".js", ".jsx", ".mjs" ],
-    "sourceMap": false,
-    "instrument": false,
-    "all": true
-  },
   "scripts": {
     "test": "cross-env NODE_ENV=test nyc mocha --recursive $(find test -name '*.spec.js')",
     "test:bundle": "npm run webpack && cross-env TEST_ENV=bundle npm run test",
