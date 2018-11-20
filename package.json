@@ -1,10 +1,10 @@
 {
   "name": "js-project-skeleton",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "javascript project skeleton for universal module definition",
   "main": "dist/index.js",
   "scripts": {
-    "version": "npm version --no-git-tag-version",
+    "flow:version": "npm version --no-git-tag-version",
     "release:start": "./node_modules/.bin/can-npm-publish --vorbose && git flow release start $npm_package_version",
     "release:finish": "git flow release finish $npm_package_version",
     "release:push": "git push origin master && git push origin develop && git push origin $npm_package_version",
