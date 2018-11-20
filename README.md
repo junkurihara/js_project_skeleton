@@ -31,5 +31,20 @@ $ npm run html
 $ npm run build
 ```
 
+## Following GitFlow and NPM semantic versioning
+To follow the workflow and NPM semantic version rule, we implemented some scripts in `package.json`. By using the scripts, you can easily follow the workflow.
+
+1. Execute `npm run flow:version [patch|minor|major]` to bump the version of the package. This does not commit to your git repo.
+
+2. Commit the current change in **develop branch**.
+
+3. Execute `npm run release:start` that checks if the version can be published in NPM, and kicks the GitFlow release procedure.
+
+4. Prepare the release as the standard GitFlow release one.
+
+5. Execute `npm run release:finish` to finalize the GitFlow release operation.
+
+Additionally `npm run release:push` executes `git push --all`.
+
 # License
 Licensed under the MIT license, see `LICENSE` file.
