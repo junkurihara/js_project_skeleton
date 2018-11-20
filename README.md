@@ -44,7 +44,7 @@ To follow the workflow and NPM semantic version rule, we implemented some script
 
 5. Execute `npm run release:finish` to finalize the GitFlow release operation.
 
-Additionally `npm run release:push` executes `git push --all`.
+Additionally `npm run release:push` executes `git push --all` and `git push origin <the version number>`.
 
 # License
 Licensed under the MIT license, see `LICENSE` file.
