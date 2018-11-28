@@ -1,7 +1,3 @@
-import chai from 'chai';
-// const should = chai.should();
-const expect = chai.expect;
-
 import {getTestEnv} from './prepare.js';
 const env = getTestEnv();
 const hello = env.library;
