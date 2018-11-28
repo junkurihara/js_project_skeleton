@@ -28,10 +28,10 @@
       "plugins": ["babel-plugin-transform-remove-console"]
     },
     "development": {
-      "plugins": ["babel-plugin-istanbul", "transform-es2015-modules-commonjs"]
+      "plugins": ["babel-plugin-istanbul"]
     },
     "test": {
-      "plugins": ["babel-plugin-istanbul", "transform-es2015-modules-commonjs"]
+      "plugins": ["babel-plugin-istanbul"]
     }
   }
 }

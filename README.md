@@ -1,4 +1,4 @@
-Project Skeleton for JavaScript Library Development 
+Project Skeleton for JavaScript 'Universal' Library Development for Node.js and Browsers
 --
 
 > **WARNING**: At this time this solution should be considered suitable for research and experimentation, further code and security review is needed before utilization in a production application.

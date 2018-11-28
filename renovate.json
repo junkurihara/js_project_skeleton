@@ -16,5 +16,5 @@
   "patch": {
     "automerge": true
   },
-  "labels": ["update-dependencies"],
+  "labels": ["update-dependencies"]
 }
