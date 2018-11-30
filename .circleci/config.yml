@@ -45,13 +45,9 @@ jobs:
       - run: npm run karma
 
       # test
-      - run: mkdir -p ~/cascade-webpage
-      - run: cd ~/cascade-webpage && git clone https://github.com/junkurihara/cascade-webpage.git .
-      - run: cp ~/repo/LICENSE .
-      - run: git add .
-      - run: git commit -am 'Updated via CircleCI'
-      - run: git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/junkurihara/cascade-webpage.git master
-      - run: git clone -q https://${GITHUB_PERSONAL_TOKEN_PRIVATE}@github.com/zettant/securityhub_sdk.git
+      - run:
+          name: 'testing git push'
+          command: mkdir -p ~/cascade-webpage && cd ~/cascade-webpage && git clone https://github.com/junkurihara/cascade-webpage.git . && cp ~/repo/LICENSE . && git add . && git commit -am 'Updated via CircleCI' && git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/junkurihara/cascade-webpage.git master && git clone -q https://${GITHUB_PERSONAL_TOKEN_PRIVATE}@github.com/zettant/securityhub_sdk.git
 
       - store_artifacts:
           path: ./coverage
