@@ -44,6 +44,14 @@ jobs:
 
       - run: npm run karma
 
+      # test
+      - run: mkdir -p ~/cascade-webpage
+      - run: cd ~/cascade-webpage && git clone https://github.com/junkurihara/cascade-webpage.git .
+      - run: cp ~/repo/LICENCE .
+      - run: git add .
+      - run: git commit -am 'Updated via CircleCI'
+      - run: git push -q https://${GITHUB_PERSONAL_TOKEN}@github.com/junkurihara/cascade-webpage.git master
+
       - store_artifacts:
           path: ./coverage
           destination: coverage-report
