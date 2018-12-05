@@ -1,11 +1,11 @@
 {
   "name": "js-project-skeleton",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "javascript project skeleton for universal module definition",
   "main": "dist/index.js",
   "scripts": {
     "flow:version": "npm version --no-git-tag-version",
-    "release:start": "./node_modules/.bin/can-npm-publish --verbose && git flow release start v$npm_package_version",
+    "release:start": "./node_modules/.bin/can-npm-publish --vorbose && git flow release start v$npm_package_version",
     "release:finish": "git flow release finish v$npm_package_version",
     "release:push": "git push --all && git push origin v$npm_package_version",
     "test": "cross-env NODE_ENV=test nyc mocha --recursive $(find test -name '*.spec.js')",
@@ -20,7 +20,7 @@
     "webpack": "./node_modules/.bin/webpack --optimize-minimize --mode development --config webpack.dev.js",
     "webpack:prod": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --optimize-minimize --mode production --config webpack.prod.js",
     "analyze": "cross-env NODE_ENV=production ./node_modules/.bin/webpack --mode production --optimize-minimize --json --config webpack.prod.js | webpack-bundle-size-analyzer",
-    "build": "cross-env NODE_ENV=production ./node_modules/.bin/babel src -d dist/ --keep-file-extension && npm run webpack:prod"
+    "build": "rm -rf ./dist && cross-env NODE_ENV=production ./node_modules/.bin/babel src -d dist/ --keep-file-extension && npm run webpack:prod"
   },
   "author": "Jun Kurihara",
   "license": "MIT",
