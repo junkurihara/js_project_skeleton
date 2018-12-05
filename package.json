@@ -13,7 +13,7 @@
     "karma": "cross-env TEST_ENV=source ./node_modules/.bin/karma start",
     "karma:bundle": "npm run webpack && cross-env TEST_ENV=bundle ./node_modules/.bin/karma start",
     "karma:window": "npm run webpack && cross-env TEST_ENV=window ./node_modules/.bin/karma start",
-    "html": "npm run html:source && npm run html:bundle && npm run html:window",
+    "html": "npm run webpack && npm run html:source && npm run html:bundle && npm run html:window",
     "html:source": "cross-env TEST_ENV=source NODE_ENV=html npm run webpack",
     "html:bundle": "cross-env TEST_ENV=bundle NODE_ENV=html npm run webpack",
     "html:window": "cross-env TEST_ENV=window NODE_ENV=html npm run webpack",
