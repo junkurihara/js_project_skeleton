@@ -1,6 +1,6 @@
 {
   "name": "js-project-skeleton",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "javascript project skeleton for universal module definition",
   "main": "dist/index.js",
   "scripts": {
@@ -67,6 +67,6 @@
     "webpack-merge": "4.2.1"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.5"
+    "@babel/runtime": "^7.3.4"
   }
 }
