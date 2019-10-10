@@ -37,8 +37,8 @@
     "project skeleton"
   ],
   "devDependencies": {
-    "@babel/cli": "7.6.3",
-    "@babel/core": "7.6.3",
+    "@babel/cli": "7.6.4",
+    "@babel/core": "7.6.4",
     "@babel/plugin-transform-runtime": "7.6.2",
     "@babel/plugin-transform-regenerator": "7.4.5",
     "@babel/polyfill": "7.6.0",
