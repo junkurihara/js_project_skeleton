@@ -6,5 +6,7 @@ yarn-error.log
 .idea/
 .vscode/
 .coverage/
+coverage/
 .nyc_output/
 dist/
+yarn.lock
