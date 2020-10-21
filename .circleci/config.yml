@@ -32,7 +32,7 @@ jobs:
 
       - run:
           name: 'package install'
-          command: yarn --ignore-engines install # workaround
+          command: yarn install
 
       - save_cache:
           paths:
