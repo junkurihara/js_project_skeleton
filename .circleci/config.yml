@@ -3,11 +3,23 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
+
+workflows:
+  version: 2
+  test-publish:
+    jobs:
+      - build:
+          context:
+            - docker-hub-cred
+
 jobs:
   build:
     docker:
       # specify the version you desire here
       - image: circleci/node:lts-browsers
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_TOKEN
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
