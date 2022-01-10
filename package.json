@@ -63,7 +63,7 @@
     "@babel/runtime": "~7.16.0"
   },
   "resolutions": {
-    "colors": "1.4.0"
+    "colors": "1.4.2"
   },
   "overrides": {
     "colors@1": "1.4.0"
