@@ -33,10 +33,10 @@
     "project skeleton"
   ],
   "devDependencies": {
-    "@babel/cli": "7.16.8",
-    "@babel/core": "7.16.12",
+    "@babel/cli": "7.17.0",
+    "@babel/core": "7.17.0",
     "@babel/plugin-transform-regenerator": "7.16.7",
-    "@babel/plugin-transform-runtime": "7.16.10",
+    "@babel/plugin-transform-runtime": "7.17.0",
     "@babel/polyfill": "7.12.1",
     "@babel/preset-env": "7.16.11",
     "babel-eslint": "10.1.0",
@@ -60,7 +60,7 @@
     "webpack-cli": "4.9.2"
   },
   "dependencies": {
-    "@babel/runtime": "~7.16.0"
+    "@babel/runtime": "~7.17.0"
   },
   "resolutions": {
     "colors": "1.4.0"
