@@ -60,7 +60,7 @@
     "webpack-cli": "4.10.0"
   },
   "dependencies": {
-    "@babel/runtime": "~7.19.0"
+    "@babel/runtime": "~7.20.0"
   },
   "resolutions": {
     "colors": "1.4.0"
