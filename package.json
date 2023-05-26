@@ -34,11 +34,11 @@
   ],
   "devDependencies": {
     "@babel/cli": "7.21.5",
-    "@babel/core": "7.21.8",
+    "@babel/core": "7.22.1",
     "@babel/plugin-transform-regenerator": "7.21.5",
-    "@babel/plugin-transform-runtime": "7.21.4",
+    "@babel/plugin-transform-runtime": "7.22.2",
     "@babel/polyfill": "7.12.1",
-    "@babel/preset-env": "7.21.5",
+    "@babel/preset-env": "7.22.2",
     "@babel/eslint-parser": "7.21.8",
     "babel-jest": "29.5.0",
     "babel-loader": "9.1.2",
@@ -60,7 +60,7 @@
     "webpack-cli": "5.1.1"
   },
   "dependencies": {
-    "@babel/runtime": "~7.21.0"
+    "@babel/runtime": "~7.22.0"
   },
   "resolutions": {
     "colors": "1.4.0"
